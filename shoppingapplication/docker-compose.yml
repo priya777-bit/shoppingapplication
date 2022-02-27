@@ -1,0 +1,43 @@
+version: '3.3'
+services:
+  userservice:
+    image: userimage
+    container_name: usercontainer
+    build: jwt-jpa/
+    restart: always
+    network_mode: host
+    ports:
+      - "8085:8085"
+    depends_on:
+      - mysqlservice
+
+  productservice:
+    image: productimage
+    container_name: productcontainer
+    build: mongodbquery/
+    restart: always
+    network_mode: host
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongoservice
+
+  mongoservice:
+    image: mongoimage
+    container_name: mongocontainer
+    ports:
+      - "27017:27017"
+    network_mode: host
+
+  mysqlservice:
+    image: mysql:5.5
+    container_name: mysqlcontainer
+    network_mode: host
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: host
+      MYSQL_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
