@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/customer")
+@RequestMapping("api/v2/customer")
 public class ProductController {
     ProductService productService;
 
@@ -33,18 +33,18 @@ public class ProductController {
         }
         catch (Exception e)
         {
-            return new ResponseEntity<>("Customer Id May Be Exists..",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Try Again..",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/product/{customerId}")
-    public ResponseEntity<?> saveCustomerProduct(@RequestBody Product product,@PathVariable int customerId) throws CustomerNotFoundException, ProductAlreadyExistsException
+    @PutMapping("/user/{customerEmailId}/product")
+    public ResponseEntity<?> saveCustomerProduct(@PathVariable String  customerEmailId,@RequestBody Product product) throws CustomerNotFoundException, ProductAlreadyExistsException
     {
         try
         {
-            return new ResponseEntity<>(productService.saveCustomerProduct(product,customerId),HttpStatus.OK);
+            return new ResponseEntity<>(productService.saveCustomerProduct(customerEmailId,product),HttpStatus.OK);
         }
-        catch (CustomerNotFoundException pe)
+        catch (CustomerNotFoundException ce)
         {
             throw new CustomerNotFoundException();
         }
@@ -53,37 +53,33 @@ public class ProductController {
         }
         catch (Exception e)
         {
-            return new ResponseEntity<>("Customer & Product Doesnt Exists..",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Try Again..",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/product/{customerId}")
-    public ResponseEntity<?> getAllProductsOfACustomer(@PathVariable int customerId) throws CustomerNotFoundException, NoProductsFoundException
+    @GetMapping("/user/{customerEmailId}")
+    public ResponseEntity<?> getAllProductsOfACustomer(@PathVariable String customerEmailId) throws CustomerNotFoundException
     {
         try
         {
-            return new ResponseEntity<>(productService.getAllProductsOfACustomer(customerId),HttpStatus.OK);
+            return new ResponseEntity<>(productService.getAllProductsOfACustomer(customerEmailId),HttpStatus.OK);
         }
         catch (CustomerNotFoundException pe)
         {
             throw new CustomerNotFoundException();
         }
-        catch (NoProductsFoundException ne)
-        {
-            throw new NoProductsFoundException();
-        }
         catch (Exception e)
         {
-            return new ResponseEntity<>("Product & Customer Doesnt Exists..",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Try Again..",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/product/{productCode}/{customerId}")
-    public ResponseEntity<?> deleteProductOfACustomer(@PathVariable int productCode,@PathVariable int customerId) throws ProductNotFoundException,CustomerNotFoundException
+    @DeleteMapping("/user/{customerEmailId}/{productCode}")
+    public ResponseEntity<?> deleteProductOfACustomer(@PathVariable String customerEmailId,@PathVariable int productCode) throws ProductNotFoundException,CustomerNotFoundException
     {
         try
         {
-            return new ResponseEntity<>(productService.deleteProductOfACustomer(productCode,customerId),HttpStatus.OK);
+            return new ResponseEntity<>(productService.deleteProductOfACustomer(customerEmailId,productCode),HttpStatus.OK);
         }
         catch (ProductNotFoundException pe)
         {
@@ -95,7 +91,7 @@ public class ProductController {
         }
         catch (Exception e)
         {
-            return new ResponseEntity<>("Product & Customer Doesnt Exists..",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Try Again",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

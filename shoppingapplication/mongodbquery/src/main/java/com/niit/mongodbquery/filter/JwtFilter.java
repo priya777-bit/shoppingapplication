@@ -1,4 +1,4 @@
-package com.niit.mongodbquery.filter;
+package com.niit.apigateway.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

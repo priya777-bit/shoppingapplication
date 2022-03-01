@@ -43,7 +43,7 @@ public class CustomerController {
         }
     }
 
-//    @GetMapping("api/v1/customer/customers")
+//    @GetMapping("/customers")
 //    public ResponseEntity<?> getAllUsers()
 //    {
 //        return new ResponseEntity<>(customerService.getAllCustomers(),HttpStatus.OK);

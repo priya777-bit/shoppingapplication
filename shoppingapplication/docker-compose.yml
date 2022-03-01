@@ -18,12 +18,12 @@ services:
     restart: always
     network_mode: host
     ports:
-      - "8083:8083"
+      - "8081:8081"
     depends_on:
       - mongoservice
 
   mongoservice:
-    image: mongoimage
+    image: mongo:3.2-jessie
     container_name: mongocontainer
     ports:
       - "27017:27017"
@@ -37,7 +37,15 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USERNAME: host
+      MYSQL_USERNAME: user
       MYSQL_PASSWORD: root
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
+#  apigatewayservice:
+#    image: cloud-api-service
+#    container_name: apicontainer
+#    build: apigateway/
+#    restart: always
+#    network_mode: host
+#    ports:
+#      - "9001:9001"

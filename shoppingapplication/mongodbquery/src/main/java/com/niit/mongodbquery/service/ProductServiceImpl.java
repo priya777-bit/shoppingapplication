@@ -7,6 +7,8 @@ import com.niit.mongodbquery.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -21,7 +23,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Customer registerNewCustomer(Customer customer) throws CustomerAlreadyExistsException {
-        if(productRepository.findById(customer.getCustomerId()).isPresent())
+        if(productRepository.findById(customer.getCustomerEmailId()).isPresent())
         {
             throw new CustomerAlreadyExistsException();
         }
@@ -29,46 +31,63 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Customer saveCustomerProduct(Product product, int customerId) throws CustomerNotFoundException, ProductAlreadyExistsException{
-        if(productRepository.findById(product.getProductCode()).isEmpty())
-        {
-            throw new ProductAlreadyExistsException();
-        }
-        else if(productRepository.findById(customerId).isEmpty())
+    public Customer saveCustomerProduct(String customerEmailId,Product product) throws CustomerNotFoundException, ProductAlreadyExistsException{
+        if(productRepository.findById(customerEmailId).isEmpty())
         {
             throw new CustomerNotFoundException();
         }
-        Customer customer = new Customer();
-        customer.setProductList(customer.getProductList());
+
+        List<Product> productList = new ArrayList<>();
+        productList.add(product);
+
+        Customer customer = productRepository.findById(customerEmailId).get();
+        customer.setProductList(productList);
+
+//        Customer customer = productRepository.findById(customerEmailId).get();
+//        List<Product> productList = customer.getProductList();
+//
+//        if(productList.isEmpty())
+//        {
+//            customer.setProductList(Arrays.asList(product));
+//        }
+//        else
+//        {
+//            List<Product> productList1 = customer.getProductList();
+//            productList1.add(product);
+//            customer.setProductList(productList1);
+//            customer.setProductList(Arrays.asList(product));
+
         return productRepository.save(customer);
+
+
     }
 
     @Override
-    public Customer deleteProductOfACustomer(int productCode, int customerId) throws ProductNotFoundException,CustomerNotFoundException {
-        if(productRepository.findById(productCode).isEmpty())
-        {
-            throw new ProductNotFoundException();
-        }
-        else if(productRepository.findById(customerId).isEmpty())
+    public Customer deleteProductOfACustomer(String customerEmailId,int productCode) throws CustomerNotFoundException {
+        if(productRepository.findById(customerEmailId).isEmpty())
         {
             throw new CustomerNotFoundException();
         }
-        productRepository.deleteById(productCode);
-        return productRepository.findByCustomerId(customerId);
+        Customer customer = productRepository.findById(customerEmailId).get();
+        List<Product> productList = customer.getProductList();
+        for(Product p:productList)
+        {
+            if(p.getProductCode()==(productCode))
+            {
+                productList.remove(p);
+                productRepository.save(customer);
+            }
+        }
+        return customer;
     }
 
     @Override
-    public List<Product> getAllProductsOfACustomer(int customerId) throws CustomerNotFoundException, NoProductsFoundException {
-        if(productRepository.findById(customerId).isEmpty())
+    public List<Product> getAllProductsOfACustomer(String customerEmailId) throws CustomerNotFoundException {
+        if(productRepository.findById(customerEmailId).isEmpty())
         {
             throw new CustomerNotFoundException();
         }
-        List<Product> productList = productRepository.findAllProductsByCustomerId(customerId);
-        if(productList.isEmpty())
-        {
-            throw new NoProductsFoundException();
-        }
-        return productRepository.findAllProducts(productList);
+        return productRepository.findById(customerEmailId).get().getProductList();
     }
 //    @Override
 //    public Product saveDetailsOfTheProduct(Product product) throws ProductAlreadyExistsException {

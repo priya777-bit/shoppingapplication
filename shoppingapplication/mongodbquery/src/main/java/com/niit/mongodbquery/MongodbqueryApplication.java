@@ -1,6 +1,5 @@
 package com.niit.mongodbquery;
 
-import com.niit.mongodbquery.filter.JwtFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -18,10 +17,9 @@ public class MongodbqueryApplication {
 	{
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean<>();
 
-		filterRegistrationBean.setFilter(new JwtFilter());
-		filterRegistrationBean.addUrlPatterns("/api/v1/user/*");
+		filterRegistrationBean.setFilter(new com.niit.apigateway.filter.JwtFilter());
+		filterRegistrationBean.addUrlPatterns("/api/v2/customer/user/*");
 
 		return filterRegistrationBean;
 	}
-
 }

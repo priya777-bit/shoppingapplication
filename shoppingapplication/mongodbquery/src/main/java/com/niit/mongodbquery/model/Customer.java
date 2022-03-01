@@ -10,10 +10,10 @@ import java.util.List;
 @Data
 public class Customer {
     @Id
+    private String customerEmailId;
     private int customerId;
     private String customerName;
     private String shippingAddress;
-    private String customerEmailId;
     private String customerPassword;
     private List<Product> productList;
 }

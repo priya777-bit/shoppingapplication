@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ProductService {
     Customer registerNewCustomer(Customer customer) throws CustomerAlreadyExistsException;
-    Customer saveCustomerProduct(Product product, int customerId) throws CustomerNotFoundException, ProductAlreadyExistsException;
-    Customer deleteProductOfACustomer(int productCode,int customerId) throws ProductNotFoundException, CustomerNotFoundException;
-    List<Product> getAllProductsOfACustomer(int customerId) throws CustomerNotFoundException, NoProductsFoundException;
+    Customer saveCustomerProduct(String customerEmailId,Product product) throws CustomerNotFoundException, ProductAlreadyExistsException;
+    Customer deleteProductOfACustomer(String customerEmailId,int productCode) throws ProductNotFoundException, CustomerNotFoundException;
+    List<Product> getAllProductsOfACustomer(String customerEmailId) throws CustomerNotFoundException;
 
 
 //    Product updatePriceOfProduct(Product product,int productPrice) throws ProductNotFoundException;
